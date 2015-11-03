@@ -2,34 +2,24 @@ package apps.sstarzak.taskmanager.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
-import android.widget.TextView;
+import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
 
-import com.parse.FindCallback;
-import com.parse.ParseException;
-import com.parse.ParseObject;
-import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
-import java.util.List;
-
 import apps.sstarzak.taskmanager.R;
-import butterknife.Bind;
+import apps.sstarzak.taskmanager.fragments.FragmentDrawer;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 
-public class TaskListActivity extends AppCompatActivity {
+public class TaskListActivity extends AppCompatActivity implements FragmentDrawer.FragmentDrawerListener {
 
-    @OnClick(R.id.logout)
-    public void logout() {
-        ParseUser.getCurrentUser().logOut();
-        startActivity(new Intent(this, MainActivity.class));
-        this.finish();
-    }
+    private Toolbar mToolbar;
 
-    @Bind(R.id.task_list)
-    TextView task_list;
+    private FragmentDrawer drawerFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,20 +28,49 @@ public class TaskListActivity extends AppCompatActivity {
 
         ButterKnife.bind(this);
 
-        ParseQuery<ParseObject> query = new ParseQuery("TaskList");
-        query.whereEqualTo("user", ParseUser.getCurrentUser());
-        query.findInBackground(new FindCallback<ParseObject>() {
-            @Override
-            public void done(List<ParseObject> objects, ParseException e) {
-                task_list.setText(ParseUser.getCurrentUser().getUsername() + "\n\n");
+        //Action bar
+        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(mToolbar);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
 
-                for(ParseObject p : objects) {
-                    task_list.append(p.getString("name") + "\n");
-                }
-            }
-        });
+        drawerFragment = (FragmentDrawer)
+                getSupportFragmentManager().findFragmentById(R.id.fragment_navigation_drawer);
+        drawerFragment.setUp(R.id.fragment_navigation_drawer, (DrawerLayout) findViewById(R.id.drawer_layout), mToolbar);
+        drawerFragment.setDrawerListener(this);
 
-        Log.d("Logged as", ParseUser.getCurrentUser().getUsername());
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_logout) {
+            ParseUser.getCurrentUser().logOut();
+            startActivity(new Intent(this, MainActivity.class));
+            this.finish();
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        moveTaskToBack(true);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_task_list, menu);
+        return true;
+    }
+    @Override
+    public void onDrawerItemSelected(View view, int position) {
+
+    }
 }

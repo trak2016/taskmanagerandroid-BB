@@ -22,7 +22,6 @@ public class UserActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user);
-
         ButterKnife.bind(this);
 
         create.setOnClickListener(this);
@@ -35,6 +34,5 @@ public class UserActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.create: startActivity(new Intent(this, RegistrationActivity.class)); break;
             case R.id.login: startActivity(new Intent(this, LoginActivity.class)); break;
         }
-        this.finish();
     }
 }

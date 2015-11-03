@@ -9,12 +9,16 @@ import com.parse.ParseUser;
 import apps.sstarzak.taskmanager.R;
 import butterknife.ButterKnife;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity  {
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+
 
         ButterKnife.bind(this);
 
@@ -28,4 +32,5 @@ public class MainActivity extends AppCompatActivity {
             this.finish();
         }
     }
+
 }
