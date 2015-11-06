@@ -66,7 +66,9 @@ public class FragmentDrawer extends Fragment {
             navItem.setTitle(p.getString("name"));
             data.add(navItem);
         }
-        // preparing navigation drawer items
+//         preparing navigation drawer items
+
+
 //        for (int i = 0; i < titles.length; i++) {
 //            NavDrawerItem navItem = new NavDrawerItem();
 //            navItem.setTitle(titles[i]);
@@ -80,7 +82,6 @@ public class FragmentDrawer extends Fragment {
         super.onCreate(savedInstanceState);
 
         // drawer labels
-        titles = getActivity().getResources().getStringArray(R.array.nav_drawer_labels);
     }
 
     @Override
