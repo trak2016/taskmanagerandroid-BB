@@ -2,6 +2,8 @@ package apps.sstarzak.taskmanager.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -13,10 +15,10 @@ import com.parse.ParseUser;
 
 import apps.sstarzak.taskmanager.R;
 import apps.sstarzak.taskmanager.fragments.FragmentDrawer;
+import apps.sstarzak.taskmanager.fragments.TasksFragment;
 import butterknife.ButterKnife;
 
 public class TaskListActivity extends AppCompatActivity implements FragmentDrawer.FragmentDrawerListener {
-
     private Toolbar mToolbar;
 
     private FragmentDrawer drawerFragment;
@@ -28,10 +30,10 @@ public class TaskListActivity extends AppCompatActivity implements FragmentDrawe
 
         ButterKnife.bind(this);
 
-        //Action bar
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setTitle("Todo List");
 
         drawerFragment = (FragmentDrawer)
                 getSupportFragmentManager().findFragmentById(R.id.fragment_navigation_drawer);
@@ -69,8 +71,23 @@ public class TaskListActivity extends AppCompatActivity implements FragmentDrawe
         getMenuInflater().inflate(R.menu.menu_task_list, menu);
         return true;
     }
+
     @Override
     public void onDrawerItemSelected(View view, int position) {
+        TasksFragment fragment = null;
 
+
+        switch (position) {
+            default:
+                fragment = TasksFragment.newInstance(position);
+        }
+
+        if (fragment != null) {
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+            fragmentTransaction.replace(R.id.container_body, fragment);
+            fragmentTransaction.commit();
+
+        }
     }
 }

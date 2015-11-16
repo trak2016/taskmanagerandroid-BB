@@ -28,6 +28,7 @@ import java.util.List;
 
 import apps.sstarzak.taskmanager.R;
 import apps.sstarzak.taskmanager.adapters.NavigationDrawerAdapter;
+import apps.sstarzak.taskmanager.globals.Globals;
 import apps.sstarzak.taskmanager.models.NavDrawerItem;
 
 public class FragmentDrawer extends Fragment {
@@ -46,6 +47,11 @@ public class FragmentDrawer extends Fragment {
 
     }
 
+    public static FragmentDrawer newInstance() {
+        FragmentDrawer drawer = new FragmentDrawer();
+        return drawer;
+    }
+
     public void setDrawerListener(FragmentDrawerListener listener) {
         this.drawerListener = listener;
     }
@@ -55,25 +61,16 @@ public class FragmentDrawer extends Fragment {
 
         ParseQuery<ParseObject> task_lists = new ParseQuery<ParseObject>("TaskList");
         task_lists.whereEqualTo("user", ParseUser.getCurrentUser());
-        List<ParseObject> parseObject = new ArrayList<>();
         try {
-             parseObject= task_lists.find();
+             Globals.task_lists = task_lists.find();
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        for(ParseObject p: parseObject) {
+        for(ParseObject p: Globals.task_lists) {
             NavDrawerItem navItem = new NavDrawerItem();
             navItem.setTitle(p.getString("name"));
             data.add(navItem);
         }
-//         preparing navigation drawer items
-
-
-//        for (int i = 0; i < titles.length; i++) {
-//            NavDrawerItem navItem = new NavDrawerItem();
-//            navItem.setTitle(titles[i]);
-//            data.add(navItem);
-//        }
         return data;
     }
 
@@ -112,6 +109,7 @@ public class FragmentDrawer extends Fragment {
 
 
     public void setUp(int fragmentId, DrawerLayout drawerLayout, final Toolbar toolbar) {
+
         containerView = getActivity().findViewById(fragmentId);
         mDrawerLayout = drawerLayout;
         mDrawerToggle = new ActionBarDrawerToggle(getActivity(), drawerLayout, toolbar, R.string.drawer_open, R.string.drawer_close) {

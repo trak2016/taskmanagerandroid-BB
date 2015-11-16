@@ -9,40 +9,8 @@
     <string name="title_activity_task_list">TaskListActivity</string>
 
 
-
-    <!-- navigation drawer item labels  -->
-    <string-array name="nav_drawer_labels">
-        <item>@string/nav_item_info</item>
-        <item>@string/nav_item_nearest</item>
-        <item>@string/nav_item_wiki</item>
-        <item>@string/nav_item_settings</item>
-        <item>@string/nav_item_wiki</item>
-        <item>@string/nav_item_settings</item>
-        <item>@string/nav_item_wiki</item>
-        <item>@string/nav_item_settings</item>
-        <item>@string/nav_item_wiki</item>
-        <item>@string/nav_item_settings</item>
-        <item>@string/nav_item_wiki</item>
-        <item>@string/nav_item_settings</item>
-        <item>@string/nav_item_wiki</item>
-        <item>@string/nav_item_settings</item>
-        <item>@string/nav_item_settings</item>
-        <item>@string/nav_item_wiki</item>
-        <item>@string/nav_item_settings</item>
-        <item>@string/nav_item_wiki</item>
-    </string-array>
-
     <string name="action_search">Search</string>
     <string name="drawer_open">Open</string>
     <string name="drawer_close">Close</string>
-
-    <string name="nav_item_info">Ciekawostki</string>
-    <string name="nav_item_nearest">Kościoły</string>
-    <string name="nav_item_wiki">Wikipedia</string>
-    <string name="nav_item_settings">Ustawienia</string>
-
-<!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-
 
 </resources>
