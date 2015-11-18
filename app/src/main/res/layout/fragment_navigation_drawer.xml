@@ -7,14 +7,14 @@
     <RelativeLayout
         android:id="@+id/nav_header_container"
 
-        android:background="@color/colorPrimary"
+        android:background="@color/white"
         android:layout_width="match_parent"
         android:layout_height="100dp"
         android:layout_alignParentTop="true">
 
         <ImageView
             android:layout_width="match_parent"
-            android:src="@drawable/text"
+            android:src="@drawable/todolist"
             android:layout_height="wrap_content" />
 
     </RelativeLayout>

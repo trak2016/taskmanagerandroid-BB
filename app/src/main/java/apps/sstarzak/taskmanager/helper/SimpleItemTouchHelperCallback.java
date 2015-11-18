@@ -85,7 +85,7 @@ public class SimpleItemTouchHelperCallback extends ItemTouchHelper.Callback {
        // viewHolder.itemView.setBackgroundColor((int) ALPHA_FULL);
 
 
-        mAdapter.onItemDismiss(viewHolder.getAdapterPosition());
+        mAdapter.onItemSwipe(viewHolder.getAdapterPosition());
 
     }
 

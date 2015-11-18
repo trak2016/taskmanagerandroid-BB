@@ -33,7 +33,7 @@ public class TaskListActivity extends AppCompatActivity implements FragmentDrawe
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
-        getSupportActionBar().setTitle("Todo List");
+        getSupportActionBar().setTitle(ParseUser.getCurrentUser().getUsername() + "'s To Do's");
 
         drawerFragment = (FragmentDrawer)
                 getSupportFragmentManager().findFragmentById(R.id.fragment_navigation_drawer);

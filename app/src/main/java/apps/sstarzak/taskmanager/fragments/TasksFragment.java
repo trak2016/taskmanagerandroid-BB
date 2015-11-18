@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +20,7 @@ import java.util.List;
 import apps.sstarzak.taskmanager.R;
 import apps.sstarzak.taskmanager.adapters.TasksAdapter;
 import apps.sstarzak.taskmanager.globals.Globals;
+import apps.sstarzak.taskmanager.helper.ItemClickSupport;
 import apps.sstarzak.taskmanager.helper.OnStartDragListener;
 import apps.sstarzak.taskmanager.helper.SimpleItemTouchHelperCallback;
 import apps.sstarzak.taskmanager.parse.Task;
@@ -58,21 +60,13 @@ public class TasksFragment extends Fragment {
         recList.setHasFixedSize(true);
 
 
-
-//        ItemClickSupport.addTo(recList).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
-//            @Override
-//            public void onItemClicked(RecyclerView recyclerView, int position, View v) {
-//                Log.d("position", String.valueOf(position));
-//            }
-//        });
-
-
         ParseQuery<Task> selected = ParseQuery.getQuery(Task.class);
         selected.whereEqualTo("taskList", Globals.task_lists.get(getArguments().getInt("position")));
-        selected.orderByAscending("priority");
+        selected.addDescendingOrder("priority");
+
         selected.findInBackground(new FindCallback<Task>() {
             @Override
-            public void done(List<Task> objects, ParseException e) {
+            public void done(final List<Task> objects, ParseException e) {
 
                 for (Task t : objects)
                     t.pinInBackground();
@@ -80,6 +74,13 @@ public class TasksFragment extends Fragment {
                 TasksAdapter tasksAdapter = new TasksAdapter(objects, new OnStartDragListener() {
                     @Override
                     public void onStartDrag(RecyclerView.ViewHolder viewHolder) {
+                    }
+                });
+
+                ItemClickSupport.addTo(recList).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
+                    @Override
+                    public void onItemClicked(RecyclerView recyclerView, int position, View v) {
+                        Log.d("position", objects.get(position).getName());
                     }
                 });
 

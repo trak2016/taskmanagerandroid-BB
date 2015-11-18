@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -51,15 +52,22 @@ public class TasksAdapter extends RecyclerView.Adapter<TasksAdapter.TaskViewHold
 
     @Override
     public void onBindViewHolder(final TaskViewHolder holder, int position) {
-        holder.priority.setText(String.valueOf(tasks.get(position).getPriority()));
+
+        switch (tasks.get(position).getPriority().intValue()) {
+            case 0: holder.priority.setImageResource(R.drawable.green_dot); break;
+            case 1: holder.priority.setImageResource(R.drawable.yellow_dot); break;
+            case 2: holder.priority.setImageResource(R.drawable.orange_dot); break;
+            case 3: holder.priority.setImageResource(R.drawable.red_dot); break;
+            case 4: holder.priority.setImageResource(R.drawable.black_dot); break;
+        }
         holder.name.setText(tasks.get(position).getName());
         holder.desc.setText(tasks.get(position).getDescription());
 
         //TODO: fix date
 
         switch(tasks.get(position).getStatus().intValue()) {
-            case 2: holder.ll_line.setBackgroundResource(R.drawable.diagonal_line); break;
-            case 1: holder.ll_line.setBackgroundColor((int) ALPHA_FULL); break;
+            case 1: holder.ll_line.setBackgroundResource(R.drawable.diagonal_line); break;
+            case 0: holder.ll_line.setBackgroundColor((int) ALPHA_FULL); break;
             default: holder.ll_line.setBackgroundColor((int) ALPHA_FULL); break;
         }
 
@@ -81,12 +89,12 @@ public class TasksAdapter extends RecyclerView.Adapter<TasksAdapter.TaskViewHold
     }
 
     @Override
-    public void onItemDismiss(int position) {
+    public void onItemSwipe(int position) {
 
-        if(tasks.get(position).getStatus().equals(2)) {
-            tasks.get(position).setStatus(1);
+        if(tasks.get(position).getStatus().equals(1)) {
+            tasks.get(position).setStatus(0);
         } else {
-            tasks.get(position).setStatus(2);
+            tasks.get(position).setStatus(1);
         }
 
         ParseQuery<Task> query = ParseQuery.getQuery(Task.class);
@@ -135,10 +143,9 @@ public class TasksAdapter extends RecyclerView.Adapter<TasksAdapter.TaskViewHold
     }
 
 
-
     public class TaskViewHolder extends RecyclerView.ViewHolder implements ItemTouchHelperViewHolder{
 
-        public TextView priority;
+        public ImageView priority;
         public TextView name;
         public TextView desc;
         public TextView due_to;
@@ -146,7 +153,7 @@ public class TasksAdapter extends RecyclerView.Adapter<TasksAdapter.TaskViewHold
 
         public TaskViewHolder(View itemView) {
             super(itemView);
-            priority = (TextView) itemView.findViewById(R.id.priority);
+            priority = (ImageView) itemView.findViewById(R.id.priority);
             name = (TextView) itemView.findViewById(R.id.name);
             desc = (TextView) itemView.findViewById(R.id.desc);
             due_to = (TextView) itemView.findViewById(R.id.dueTo);
