@@ -1,4 +1,4 @@
-package apps.sstarzak.taskmanager.adapters;
+package apps.sstarzak.taskmanager.helper;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.View;

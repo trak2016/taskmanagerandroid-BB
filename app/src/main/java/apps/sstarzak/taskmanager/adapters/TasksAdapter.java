@@ -9,6 +9,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.parse.ParseException;
+import com.parse.ParseObject;
+import com.parse.ParseQuery;
+
 import java.util.Collections;
 import java.util.List;
 
@@ -67,13 +71,35 @@ public class TasksAdapter extends RecyclerView.Adapter<TasksAdapter.TaskViewHold
 
     @Override
     public void onItemDismiss(int position) {
-        tasks.remove(position);
-        notifyItemRemoved(position);
+//        tasks.remove(position);
+//        notifyItemRemoved(position);
     }
 
     @Override
     public boolean onItemMove(int fromPosition, int toPosition) {
         Collections.swap(tasks, fromPosition, toPosition);
+
+        Integer priority_swap_helper;
+        priority_swap_helper = tasks.get(fromPosition).getPriority().intValue();
+        tasks.get(fromPosition).setPriority(tasks.get(toPosition).getPriority().intValue());
+        tasks.get(toPosition).setPriority(priority_swap_helper);
+
+        ParseQuery<Task> query = ParseQuery.getQuery(Task.class);
+        query.fromLocalDatastore();
+        try {
+            ParseObject parseObject = query.get(tasks.get(fromPosition).getObjectId());
+            parseObject.put("priority",tasks.get(fromPosition).getPriority());
+            parseObject.saveInBackground();
+
+            parseObject = query.get(tasks.get(toPosition).getObjectId());
+            parseObject.put("priority",tasks.get(toPosition).getPriority());
+            parseObject.saveInBackground();
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+
         notifyItemMoved(fromPosition, toPosition);
         return true;
     }

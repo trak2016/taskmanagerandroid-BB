@@ -21,6 +21,7 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 
+import apps.sstarzak.taskmanager.R;
 import apps.sstarzak.taskmanager.adapters.TasksAdapter;
 
 /**
@@ -81,16 +82,24 @@ public class SimpleItemTouchHelperCallback extends ItemTouchHelper.Callback {
     @Override
     public void onSwiped(RecyclerView.ViewHolder viewHolder, int i) {
         // Notify the adapter of the dismissal
+
+        viewHolder.itemView.setBackgroundColor((int) ALPHA_FULL);
+
+        viewHolder.itemView.setBackgroundResource(R.drawable.diagonal_line);
+
         mAdapter.onItemDismiss(viewHolder.getAdapterPosition());
     }
 
     @Override
     public void onChildDraw(Canvas c, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
         if (actionState == ItemTouchHelper.ACTION_STATE_SWIPE) {
+            //TODO: swipe animation
             // Fade out the view as it is swiped out of the parent's bounds
-            final float alpha = ALPHA_FULL - Math.abs(dX) / (float) viewHolder.itemView.getWidth();
-            viewHolder.itemView.setAlpha(alpha);
-            viewHolder.itemView.setTranslationX(dX);
+            //final float alpha = ALPHA_FULL - Math.abs(dX) / (float) viewHolder.itemView.getWidth();
+//            viewHolder.itemView.setAlpha(alpha);
+//            viewHolder.itemView.setTranslationX(dX);
+
+
         } else {
             super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
         }

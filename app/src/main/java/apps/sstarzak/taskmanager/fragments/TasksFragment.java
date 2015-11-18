@@ -36,7 +36,7 @@ public class TasksFragment extends Fragment {
         // Required empty public constructor
     }
 
-    public static TasksFragment newInstance(int position){
+    public static TasksFragment newInstance(int position) {
         TasksFragment tasksFragment = new TasksFragment();
         Bundle bundle = new Bundle();
         bundle.putInt("position", position);
@@ -58,6 +58,7 @@ public class TasksFragment extends Fragment {
         recList.setHasFixedSize(true);
 
 
+
 //        ItemClickSupport.addTo(recList).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
 //            @Override
 //            public void onItemClicked(RecyclerView recyclerView, int position, View v) {
@@ -68,20 +69,22 @@ public class TasksFragment extends Fragment {
 
         ParseQuery<Task> selected = ParseQuery.getQuery(Task.class);
         selected.whereEqualTo("taskList", Globals.task_lists.get(getArguments().getInt("position")));
+        selected.orderByAscending("priority");
         selected.findInBackground(new FindCallback<Task>() {
             @Override
             public void done(List<Task> objects, ParseException e) {
+
+                for (Task t : objects)
+                    t.pinInBackground();
+
                 TasksAdapter tasksAdapter = new TasksAdapter(objects, new OnStartDragListener() {
                     @Override
                     public void onStartDrag(RecyclerView.ViewHolder viewHolder) {
-//                        mItemTouchHelper.startDrag(viewHolder);
-//                        mItemTouchHelper.startSwipe(viewHolder);
                     }
                 });
 
                 ItemTouchHelper.Callback callback = new SimpleItemTouchHelperCallback(tasksAdapter);
                 mItemTouchHelper = new ItemTouchHelper(callback);
-
                 mItemTouchHelper.attachToRecyclerView(recList);
 
                 recList.setAdapter(tasksAdapter);
@@ -89,7 +92,7 @@ public class TasksFragment extends Fragment {
         });
 
 
-        return v ;
+        return v;
     }
 
 
