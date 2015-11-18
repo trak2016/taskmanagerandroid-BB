@@ -21,7 +21,6 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 
-import apps.sstarzak.taskmanager.R;
 import apps.sstarzak.taskmanager.adapters.TasksAdapter;
 
 /**
@@ -83,11 +82,11 @@ public class SimpleItemTouchHelperCallback extends ItemTouchHelper.Callback {
     public void onSwiped(RecyclerView.ViewHolder viewHolder, int i) {
         // Notify the adapter of the dismissal
 
-        viewHolder.itemView.setBackgroundColor((int) ALPHA_FULL);
+       // viewHolder.itemView.setBackgroundColor((int) ALPHA_FULL);
 
-        viewHolder.itemView.setBackgroundResource(R.drawable.diagonal_line);
 
         mAdapter.onItemDismiss(viewHolder.getAdapterPosition());
+
     }
 
     @Override
@@ -99,9 +98,14 @@ public class SimpleItemTouchHelperCallback extends ItemTouchHelper.Callback {
 //            viewHolder.itemView.setAlpha(alpha);
 //            viewHolder.itemView.setTranslationX(dX);
 
+//
+//            viewHolder.itemView.setBackgroundColor((int) ALPHA_FULL);
+//            viewHolder.itemView.setBackgroundResource(R.drawable.diagonal_line);
+
 
         } else {
             super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
+
         }
     }
 
@@ -124,6 +128,7 @@ public class SimpleItemTouchHelperCallback extends ItemTouchHelper.Callback {
         super.clearView(recyclerView, viewHolder);
 
         viewHolder.itemView.setAlpha(ALPHA_FULL);
+
 
         if (viewHolder instanceof ItemTouchHelperViewHolder) {
             // Tell the view holder it's time to restore the idle state

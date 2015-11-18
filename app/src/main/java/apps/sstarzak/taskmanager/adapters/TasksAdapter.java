@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.parse.ParseException;
@@ -31,6 +32,9 @@ public class TasksAdapter extends RecyclerView.Adapter<TasksAdapter.TaskViewHold
 
     private  OnStartDragListener mDragStartListener;
 
+
+    public static final float ALPHA_FULL = 1.0f;
+
     public TasksAdapter(List<Task> tasks, OnStartDragListener mDragStartListener) {
         this.tasks = tasks;
         this.mDragStartListener = mDragStartListener;
@@ -41,6 +45,7 @@ public class TasksAdapter extends RecyclerView.Adapter<TasksAdapter.TaskViewHold
 
         View item = LayoutInflater.from(parent.getContext()).inflate(
                 R.layout.list_row_item, parent, false);
+
         return new TaskViewHolder(item);
     }
 
@@ -51,6 +56,12 @@ public class TasksAdapter extends RecyclerView.Adapter<TasksAdapter.TaskViewHold
         holder.desc.setText(tasks.get(position).getDescription());
 
         //TODO: fix date
+
+        switch(tasks.get(position).getStatus().intValue()) {
+            case 2: holder.ll_line.setBackgroundResource(R.drawable.diagonal_line); break;
+            case 1: holder.ll_line.setBackgroundColor((int) ALPHA_FULL); break;
+            default: holder.ll_line.setBackgroundColor((int) ALPHA_FULL); break;
+        }
 
         holder.itemView.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -71,9 +82,28 @@ public class TasksAdapter extends RecyclerView.Adapter<TasksAdapter.TaskViewHold
 
     @Override
     public void onItemDismiss(int position) {
-//        tasks.remove(position);
-//        notifyItemRemoved(position);
+
+        if(tasks.get(position).getStatus().equals(2)) {
+            tasks.get(position).setStatus(1);
+        } else {
+            tasks.get(position).setStatus(2);
+        }
+
+        ParseQuery<Task> query = ParseQuery.getQuery(Task.class);
+        query.fromLocalDatastore();
+        ParseObject parseObject = null;
+        try {
+            parseObject = query.get(tasks.get(position).getObjectId());
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        parseObject.put("status",tasks.get(position).getStatus());
+        parseObject.saveInBackground();
+
+        notifyDataSetChanged();
     }
+
+
 
     @Override
     public boolean onItemMove(int fromPosition, int toPosition) {
@@ -99,10 +129,12 @@ public class TasksAdapter extends RecyclerView.Adapter<TasksAdapter.TaskViewHold
             e.printStackTrace();
         }
 
-
         notifyItemMoved(fromPosition, toPosition);
+
         return true;
     }
+
+
 
     public class TaskViewHolder extends RecyclerView.ViewHolder implements ItemTouchHelperViewHolder{
 
@@ -110,6 +142,7 @@ public class TasksAdapter extends RecyclerView.Adapter<TasksAdapter.TaskViewHold
         public TextView name;
         public TextView desc;
         public TextView due_to;
+        public LinearLayout ll_line;
 
         public TaskViewHolder(View itemView) {
             super(itemView);
@@ -117,6 +150,7 @@ public class TasksAdapter extends RecyclerView.Adapter<TasksAdapter.TaskViewHold
             name = (TextView) itemView.findViewById(R.id.name);
             desc = (TextView) itemView.findViewById(R.id.desc);
             due_to = (TextView) itemView.findViewById(R.id.dueTo);
+            ll_line = (LinearLayout) itemView.findViewById(R.id.ll_line);
         }
 
         @Override
