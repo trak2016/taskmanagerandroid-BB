@@ -1,46 +1,63 @@
 package apps.sstarzak.taskmanager.adapters;
 
+import android.graphics.Color;
+import android.support.v4.view.MotionEventCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import java.text.SimpleDateFormat;
+import java.util.Collections;
 import java.util.List;
 
 import apps.sstarzak.taskmanager.R;
+import apps.sstarzak.taskmanager.helper.ItemTouchHelperAdapter;
+import apps.sstarzak.taskmanager.helper.ItemTouchHelperViewHolder;
+import apps.sstarzak.taskmanager.helper.OnStartDragListener;
 import apps.sstarzak.taskmanager.parse.Task;
 
 /**
  * Created by sstarzak on 16/11/2015.
  */
-public class TasksAdapter extends RecyclerView.Adapter<TasksAdapter.TaskViewHolder> {
+public class TasksAdapter extends RecyclerView.Adapter<TasksAdapter.TaskViewHolder> implements ItemTouchHelperAdapter {
 
     private List<Task> tasks;
 
-    public TasksAdapter(List<Task> tasks) {
+    private  OnStartDragListener mDragStartListener;
+
+    public TasksAdapter(List<Task> tasks, OnStartDragListener mDragStartListener) {
         this.tasks = tasks;
+        this.mDragStartListener = mDragStartListener;
     }
 
     @Override
     public TaskViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
         View item = LayoutInflater.from(parent.getContext()).inflate(
-                R.layout.list_row_item,parent,false);
+                R.layout.list_row_item, parent, false);
         return new TaskViewHolder(item);
     }
 
     @Override
-    public void onBindViewHolder(TaskViewHolder holder, int position) {
+    public void onBindViewHolder(final TaskViewHolder holder, int position) {
         holder.priority.setText(String.valueOf(tasks.get(position).getPriority()));
         holder.name.setText(tasks.get(position).getName());
         holder.desc.setText(tasks.get(position).getDescription());
 
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-mm-yy");
+        //TODO: fix date
 
+        holder.itemView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (MotionEventCompat.getActionMasked(event) == MotionEvent.ACTION_DOWN) {
+                    mDragStartListener.onStartDrag(holder);
+                }
+                return false;
+            }
+        });
 
-//        holder.due_to.setText(simpleDateFormat.format(tasks.get(position).getDueTo()));
     }
 
     @Override
@@ -48,7 +65,20 @@ public class TasksAdapter extends RecyclerView.Adapter<TasksAdapter.TaskViewHold
         return tasks.size();
     }
 
-    public class TaskViewHolder extends RecyclerView.ViewHolder {
+    @Override
+    public void onItemDismiss(int position) {
+        tasks.remove(position);
+        notifyItemRemoved(position);
+    }
+
+    @Override
+    public boolean onItemMove(int fromPosition, int toPosition) {
+        Collections.swap(tasks, fromPosition, toPosition);
+        notifyItemMoved(fromPosition, toPosition);
+        return true;
+    }
+
+    public class TaskViewHolder extends RecyclerView.ViewHolder implements ItemTouchHelperViewHolder{
 
         public TextView priority;
         public TextView name;
@@ -61,7 +91,16 @@ public class TasksAdapter extends RecyclerView.Adapter<TasksAdapter.TaskViewHold
             name = (TextView) itemView.findViewById(R.id.name);
             desc = (TextView) itemView.findViewById(R.id.desc);
             due_to = (TextView) itemView.findViewById(R.id.dueTo);
+        }
 
+        @Override
+        public void onItemSelected() {
+            itemView.setBackgroundColor(Color.LTGRAY);
+        }
+
+        @Override
+        public void onItemClear() {
+            itemView.setBackgroundColor(0);
         }
     }
 }

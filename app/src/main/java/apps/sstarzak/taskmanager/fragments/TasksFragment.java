@@ -5,7 +5,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +19,8 @@ import java.util.List;
 import apps.sstarzak.taskmanager.R;
 import apps.sstarzak.taskmanager.adapters.TasksAdapter;
 import apps.sstarzak.taskmanager.globals.Globals;
+import apps.sstarzak.taskmanager.helper.OnStartDragListener;
+import apps.sstarzak.taskmanager.helper.SimpleItemTouchHelperCallback;
 import apps.sstarzak.taskmanager.parse.Task;
 
 /**
@@ -28,6 +30,8 @@ public class TasksFragment extends Fragment {
 
     RecyclerView recList;
 
+    private ItemTouchHelper mItemTouchHelper;
+
     public TasksFragment() {
         // Required empty public constructor
     }
@@ -35,7 +39,7 @@ public class TasksFragment extends Fragment {
     public static TasksFragment newInstance(int position){
         TasksFragment tasksFragment = new TasksFragment();
         Bundle bundle = new Bundle();
-        bundle.putInt("position",position);
+        bundle.putInt("position", position);
         tasksFragment.setArguments(bundle);
         return tasksFragment;
     }
@@ -50,9 +54,16 @@ public class TasksFragment extends Fragment {
 
         recList = (RecyclerView) v.findViewById(R.id.tasks);
         LinearLayoutManager llm = new LinearLayoutManager(getActivity());
-        llm.setOrientation(LinearLayoutManager.VERTICAL);
         recList.setLayoutManager(llm);
         recList.setHasFixedSize(true);
+
+
+//        ItemClickSupport.addTo(recList).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
+//            @Override
+//            public void onItemClicked(RecyclerView recyclerView, int position, View v) {
+//                Log.d("position", String.valueOf(position));
+//            }
+//        });
 
 
         ParseQuery<Task> selected = ParseQuery.getQuery(Task.class);
@@ -60,10 +71,20 @@ public class TasksFragment extends Fragment {
         selected.findInBackground(new FindCallback<Task>() {
             @Override
             public void done(List<Task> objects, ParseException e) {
-                for (Task t : objects) {
-                    Log.d("qqq",t.getName());
-                    recList.setAdapter(new TasksAdapter(objects));
-                }
+                TasksAdapter tasksAdapter = new TasksAdapter(objects, new OnStartDragListener() {
+                    @Override
+                    public void onStartDrag(RecyclerView.ViewHolder viewHolder) {
+//                        mItemTouchHelper.startDrag(viewHolder);
+//                        mItemTouchHelper.startSwipe(viewHolder);
+                    }
+                });
+
+                ItemTouchHelper.Callback callback = new SimpleItemTouchHelperCallback(tasksAdapter);
+                mItemTouchHelper = new ItemTouchHelper(callback);
+
+                mItemTouchHelper.attachToRecyclerView(recList);
+
+                recList.setAdapter(tasksAdapter);
             }
         });
 
