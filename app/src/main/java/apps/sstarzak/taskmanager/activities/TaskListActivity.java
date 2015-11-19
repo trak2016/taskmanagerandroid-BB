@@ -7,6 +7,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -22,6 +23,8 @@ public class TaskListActivity extends AppCompatActivity implements FragmentDrawe
     private Toolbar mToolbar;
 
     private FragmentDrawer drawerFragment;
+
+    int position = -1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,6 +69,28 @@ public class TaskListActivity extends AppCompatActivity implements FragmentDrawe
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        if(position != -1) {
+            TasksFragment fragment = null;
+
+            Log.d("taaat","resume");
+            switch (position) {
+                default:
+                    fragment = TasksFragment.newInstance(position);
+            }
+
+            if (fragment != null) {
+                FragmentManager fragmentManager = getSupportFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.replace(R.id.container_body, fragment);
+                fragmentTransaction.commit();
+
+            }
+        }
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_task_list, menu);
@@ -74,6 +99,9 @@ public class TaskListActivity extends AppCompatActivity implements FragmentDrawe
 
     @Override
     public void onDrawerItemSelected(View view, int position) {
+
+        this.position = position;
+
         TasksFragment fragment = null;
 
 

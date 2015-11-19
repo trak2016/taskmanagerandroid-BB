@@ -1,6 +1,7 @@
 package apps.sstarzak.taskmanager.fragments;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -20,6 +21,7 @@ import com.parse.ParseQuery;
 import java.util.List;
 
 import apps.sstarzak.taskmanager.R;
+import apps.sstarzak.taskmanager.activities.NewTaskActivity;
 import apps.sstarzak.taskmanager.adapters.TasksAdapter;
 import apps.sstarzak.taskmanager.globals.Globals;
 import apps.sstarzak.taskmanager.helper.ItemClickSupport;
@@ -31,17 +33,13 @@ import apps.sstarzak.taskmanager.parse.Task;
  */
 public class TasksFragment extends Fragment {
 
-    private RecyclerView recList;
-
-    private LinearLayoutManager llm;
-
-    private ItemTouchHelper mItemTouchHelper;
-
     FloatingActionsMenu menu;
-
     FloatingActionButton removeAction;
-
     FloatingActionButton addAction;
+    private RecyclerView recList;
+    private LinearLayoutManager llm;
+    private ItemTouchHelper mItemTouchHelper;
+    TasksAdapter tasksAdapter;
 
     public TasksFragment() {
         // Required empty public constructor
@@ -85,7 +83,7 @@ public class TasksFragment extends Fragment {
                         Log.d("position", objects.get(position).getName());
                     }
                 });
-                final TasksAdapter tasksAdapter = new TasksAdapter(objects);
+                tasksAdapter = new TasksAdapter(objects);
 
                 ItemTouchHelper.Callback callback = new SimpleItemTouchHelperCallback(tasksAdapter);
                 mItemTouchHelper = new ItemTouchHelper(callback);
@@ -106,14 +104,16 @@ public class TasksFragment extends Fragment {
                             @Override
                             public void done(List<Task> objects, ParseException e) {
                                 for (Task t : objects) {
-                                    t.deleteInBackground();
+                                    t.deleteEventually();
                                 }
                                 tasksAdapter.deleteItems(objects);
 
-                                if(menu.isExpanded())
+                                if (menu.isExpanded())
                                     menu.collapse();
                             }
                         });
+
+
                     }
                 });
 
@@ -121,16 +121,20 @@ public class TasksFragment extends Fragment {
                 addAction.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if(menu.isExpanded())
+                        if (menu.isExpanded())
                             menu.collapse();
+                        Intent intent = new Intent(getContext(), NewTaskActivity.class);
+                        intent.putExtra("position",
+                                getArguments().getInt("position")
+                        );
+                        startActivity(intent);
+
                     }
                 });
             }
         });
 
-
         return v;
     }
-
 
 }

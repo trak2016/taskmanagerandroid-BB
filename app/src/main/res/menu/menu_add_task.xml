@@ -3,15 +3,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="apps.sstarzak.taskmanager.activities.TaskListActivity">
     <item
-        android:id="@+id/action_logout"
-        android:icon="@drawable/ic_logout"
+        android:id="@+id/action_add_task"
+        android:icon="@drawable/ic_action_name"
         android:orderInCategory="100"
-        android:title="logout"
-        app:showAsAction="always" />
-    <item
-        android:id="@+id/action_delete_list"
-        android:icon="@drawable/ic_action_delete_list"
-        android:orderInCategory="00"
-        android:title="logout"
+        android:title="addtask"
         app:showAsAction="always" />
 </menu>
