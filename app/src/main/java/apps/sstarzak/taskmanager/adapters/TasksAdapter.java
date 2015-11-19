@@ -29,16 +29,18 @@ import apps.sstarzak.taskmanager.parse.Task;
  */
 public class TasksAdapter extends RecyclerView.Adapter<TasksAdapter.TaskViewHolder> implements ItemTouchHelperAdapter {
 
-    private List<Task> tasks;
-
-    private  OnStartDragListener mDragStartListener;
-
-
     public static final float ALPHA_FULL = 1.0f;
+    private List<Task> tasks;
+    private OnStartDragListener mDragStartListener;
 
-    public TasksAdapter(List<Task> tasks, OnStartDragListener mDragStartListener) {
+    public TasksAdapter(List<Task> tasks) {
         this.tasks = tasks;
-        this.mDragStartListener = mDragStartListener;
+        this.mDragStartListener = new OnStartDragListener() {
+            @Override
+            public void onStartDrag(RecyclerView.ViewHolder viewHolder) {
+
+            }
+        };
     }
 
     @Override
@@ -54,21 +56,37 @@ public class TasksAdapter extends RecyclerView.Adapter<TasksAdapter.TaskViewHold
     public void onBindViewHolder(final TaskViewHolder holder, int position) {
 
         switch (tasks.get(position).getPriority().intValue()) {
-            case 0: holder.priority.setImageResource(R.drawable.green_dot); break;
-            case 1: holder.priority.setImageResource(R.drawable.yellow_dot); break;
-            case 2: holder.priority.setImageResource(R.drawable.orange_dot); break;
-            case 3: holder.priority.setImageResource(R.drawable.red_dot); break;
-            case 4: holder.priority.setImageResource(R.drawable.black_dot); break;
+            case 0:
+                holder.priority.setImageResource(R.drawable.green_dot);
+                break;
+            case 1:
+                holder.priority.setImageResource(R.drawable.yellow_dot);
+                break;
+            case 2:
+                holder.priority.setImageResource(R.drawable.orange_dot);
+                break;
+            case 3:
+                holder.priority.setImageResource(R.drawable.red_dot);
+                break;
+            case 4:
+                holder.priority.setImageResource(R.drawable.black_dot);
+                break;
         }
         holder.name.setText(tasks.get(position).getName());
         holder.desc.setText(tasks.get(position).getDescription());
 
         //TODO: fix date
 
-        switch(tasks.get(position).getStatus().intValue()) {
-            case 1: holder.ll_line.setBackgroundResource(R.drawable.diagonal_line); break;
-            case 0: holder.ll_line.setBackgroundColor((int) ALPHA_FULL); break;
-            default: holder.ll_line.setBackgroundColor((int) ALPHA_FULL); break;
+        switch (tasks.get(position).getStatus().intValue()) {
+            case 1:
+                holder.ll_line.setBackgroundResource(R.drawable.diagonal_line);
+                break;
+            case 0:
+                holder.ll_line.setBackgroundColor((int) ALPHA_FULL);
+                break;
+            default:
+                holder.ll_line.setBackgroundColor((int) ALPHA_FULL);
+                break;
         }
 
         holder.itemView.setOnTouchListener(new View.OnTouchListener() {
@@ -91,7 +109,7 @@ public class TasksAdapter extends RecyclerView.Adapter<TasksAdapter.TaskViewHold
     @Override
     public void onItemSwipe(int position) {
 
-        if(tasks.get(position).getStatus().equals(1)) {
+        if (tasks.get(position).getStatus().equals(1)) {
             tasks.get(position).setStatus(0);
         } else {
             tasks.get(position).setStatus(1);
@@ -105,13 +123,23 @@ public class TasksAdapter extends RecyclerView.Adapter<TasksAdapter.TaskViewHold
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        parseObject.put("status",tasks.get(position).getStatus());
+        parseObject.put("status", tasks.get(position).getStatus());
         parseObject.saveInBackground();
 
         notifyDataSetChanged();
     }
 
+    public void deleteItems(List<Task> list) {
+        for (Task t : list) {
+            tasks.remove(t);
+        }
+        notifyDataSetChanged();
+    }
 
+    public void addItem(Task t) {
+        tasks.add(t);
+        notifyDataSetChanged();
+    }
 
     @Override
     public boolean onItemMove(int fromPosition, int toPosition) {
@@ -126,11 +154,11 @@ public class TasksAdapter extends RecyclerView.Adapter<TasksAdapter.TaskViewHold
         query.fromLocalDatastore();
         try {
             ParseObject parseObject = query.get(tasks.get(fromPosition).getObjectId());
-            parseObject.put("priority",tasks.get(fromPosition).getPriority());
+            parseObject.put("priority", tasks.get(fromPosition).getPriority());
             parseObject.saveInBackground();
 
             parseObject = query.get(tasks.get(toPosition).getObjectId());
-            parseObject.put("priority",tasks.get(toPosition).getPriority());
+            parseObject.put("priority", tasks.get(toPosition).getPriority());
             parseObject.saveInBackground();
 
         } catch (ParseException e) {
@@ -143,7 +171,7 @@ public class TasksAdapter extends RecyclerView.Adapter<TasksAdapter.TaskViewHold
     }
 
 
-    public class TaskViewHolder extends RecyclerView.ViewHolder implements ItemTouchHelperViewHolder{
+    public class TaskViewHolder extends RecyclerView.ViewHolder implements ItemTouchHelperViewHolder {
 
         public ImageView priority;
         public TextView name;

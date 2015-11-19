@@ -3,7 +3,8 @@
     <item
         android:top="0dp"
         android:bottom="0dp"
-        android:left="30dp"
+        android:left="15dp"
+        android:right="15dp"
         >
         <rotate
             android:pivotX="0%"

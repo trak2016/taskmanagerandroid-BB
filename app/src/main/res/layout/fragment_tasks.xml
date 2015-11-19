@@ -1,8 +1,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:fab="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:fab="http://schemas.android.com/apk/res-auto"
     tools:context="apps.sstarzak.taskmanager.fragments.TasksFragment">
 
 
@@ -13,44 +13,42 @@
         android:layout_marginTop="3dp" />
 
     <com.getbase.floatingactionbutton.FloatingActionsMenu
-        android:id="@+id/multiple_actions_left"
+        android:id="@+id/fab_tasks"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="45dp"
+        android:layout_marginEnd="56dp"
+        android:layout_marginRight="56dp"
         fab:fab_addButtonColorNormal="@color/colorPrimary"
         fab:fab_addButtonColorPressed="@color/colorPrimaryDark"
-        fab:fab_addButtonSize="normal"
         fab:fab_addButtonPlusIconColor="@color/white"
-        fab:fab_labelsPosition="left"
+        fab:fab_addButtonSize="normal"
         fab:fab_addButtonStrokeVisible="false"
         fab:fab_expandDirection="up"
-        android:layout_marginBottom="45dp"
-        android:layout_marginRight="56dp"
-        android:layout_marginEnd="56dp"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true">
+        fab:fab_labelStyle="@style/menu_labels_style"
+        fab:fab_labelsPosition="left">
+
 
         <com.getbase.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fab_del"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            fab:fab_colorNormal="@color/white"
-            fab:fab_colorPressed="@color/white_pressed"/>
+            fab:fab_colorNormal="#810f00"
+            fab:fab_colorPressed="#810f00"
+            fab:fab_size="mini"
+            fab:fab_title="Delete crossed tasks" />
 
         <com.getbase.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fab_add"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            fab:fab_colorNormal="@color/white"
-            fab:fab_title="safasdf dsfa"
-            fab:fab_colorPressed="@color/white_pressed"
-            fab:fab_size="mini"/>
-
-        <com.getbase.floatingactionbutton.FloatingActionButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:visibility="visible"
-            fab:fab_colorNormal="@color/white"
-            fab:fab_colorPressed="@color/white_pressed"
-            fab:fab_size="mini"/>
+            fab:fab_colorNormal="@color/colorPrimary"
+            fab:fab_colorPressed="@color/colorPrimary"
+            fab:fab_size="mini"
+            fab:fab_title="Add new task" />
 
     </com.getbase.floatingactionbutton.FloatingActionsMenu>
 

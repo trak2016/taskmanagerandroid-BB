@@ -11,6 +11,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.getbase.floatingactionbutton.FloatingActionButton;
+import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
@@ -21,7 +23,6 @@ import apps.sstarzak.taskmanager.R;
 import apps.sstarzak.taskmanager.adapters.TasksAdapter;
 import apps.sstarzak.taskmanager.globals.Globals;
 import apps.sstarzak.taskmanager.helper.ItemClickSupport;
-import apps.sstarzak.taskmanager.helper.OnStartDragListener;
 import apps.sstarzak.taskmanager.helper.SimpleItemTouchHelperCallback;
 import apps.sstarzak.taskmanager.parse.Task;
 
@@ -30,9 +31,17 @@ import apps.sstarzak.taskmanager.parse.Task;
  */
 public class TasksFragment extends Fragment {
 
-    RecyclerView recList;
+    private RecyclerView recList;
+
+    private LinearLayoutManager llm;
 
     private ItemTouchHelper mItemTouchHelper;
+
+    FloatingActionsMenu menu;
+
+    FloatingActionButton removeAction;
+
+    FloatingActionButton addAction;
 
     public TasksFragment() {
         // Required empty public constructor
@@ -51,14 +60,12 @@ public class TasksFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
 
-        View v = inflater.inflate(R.layout.fragment_tasks, container, false);
-
+        final View v = inflater.inflate(R.layout.fragment_tasks, container, false);
 
         recList = (RecyclerView) v.findViewById(R.id.tasks);
-        LinearLayoutManager llm = new LinearLayoutManager(getActivity());
+        llm = new LinearLayoutManager(getActivity());
         recList.setLayoutManager(llm);
         recList.setHasFixedSize(true);
-
 
         ParseQuery<Task> selected = ParseQuery.getQuery(Task.class);
         selected.whereEqualTo("taskList", Globals.task_lists.get(getArguments().getInt("position")));
@@ -68,14 +75,9 @@ public class TasksFragment extends Fragment {
             @Override
             public void done(final List<Task> objects, ParseException e) {
 
-                for (Task t : objects)
+                for (Task t : objects) {
                     t.pinInBackground();
-
-                TasksAdapter tasksAdapter = new TasksAdapter(objects, new OnStartDragListener() {
-                    @Override
-                    public void onStartDrag(RecyclerView.ViewHolder viewHolder) {
-                    }
-                });
+                }
 
                 ItemClickSupport.addTo(recList).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
                     @Override
@@ -83,12 +85,46 @@ public class TasksFragment extends Fragment {
                         Log.d("position", objects.get(position).getName());
                     }
                 });
+                final TasksAdapter tasksAdapter = new TasksAdapter(objects);
 
                 ItemTouchHelper.Callback callback = new SimpleItemTouchHelperCallback(tasksAdapter);
                 mItemTouchHelper = new ItemTouchHelper(callback);
                 mItemTouchHelper.attachToRecyclerView(recList);
 
                 recList.setAdapter(tasksAdapter);
+
+                menu = (FloatingActionsMenu) v.findViewById(R.id.fab_tasks);
+
+                removeAction = (FloatingActionButton) v.findViewById(R.id.fab_del);
+                removeAction.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        ParseQuery<Task> del_query = ParseQuery.getQuery(Task.class);
+                        del_query.whereEqualTo("status", 1);
+                        del_query.fromLocalDatastore();
+                        del_query.findInBackground(new FindCallback<Task>() {
+                            @Override
+                            public void done(List<Task> objects, ParseException e) {
+                                for (Task t : objects) {
+                                    t.deleteInBackground();
+                                }
+                                tasksAdapter.deleteItems(objects);
+
+                                if(menu.isExpanded())
+                                    menu.collapse();
+                            }
+                        });
+                    }
+                });
+
+                addAction = (FloatingActionButton) v.findViewById(R.id.fab_add);
+                addAction.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if(menu.isExpanded())
+                            menu.collapse();
+                    }
+                });
             }
         });
 
