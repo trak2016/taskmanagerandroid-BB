@@ -67,6 +67,7 @@ public class NewTaskActivity extends AppCompatActivity {
             task.setStatus(0);
             task.setDueTo(new Date());
             task.setTaskList(Globals.task_lists.get(getIntent().getIntExtra("position", 2)));
+            Globals.task_added = task;
             task.saveEventually(new SaveCallback() {
                 @Override
                 public void done(ParseException e) {

@@ -15,4 +15,6 @@ public class Globals {
     public static List<Task> task = new ArrayList<>();
     public static List<ParseObject> mile_stones = new ArrayList<>();
 
+    public static Task task_added = null;
+
 }

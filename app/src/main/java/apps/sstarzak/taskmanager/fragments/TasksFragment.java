@@ -137,4 +137,12 @@ public class TasksFragment extends Fragment {
         return v;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        if(Globals.task_added != null) {
+            tasksAdapter.addItem(Globals.task_added);
+        }
+        Globals.task_added = null;
+    }
 }
