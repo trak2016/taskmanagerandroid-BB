@@ -56,6 +56,10 @@ public class TaskListActivity extends AppCompatActivity implements FragmentDrawe
             return true;
         }
 
+        if( id == R.id.action_delete_list) {
+
+        }
+
         return super.onOptionsItemSelected(item);
     }
 
@@ -85,9 +89,9 @@ public class TaskListActivity extends AppCompatActivity implements FragmentDrawe
         if (fragment != null) {
             FragmentManager fragmentManager = getSupportFragmentManager();
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+            fragmentTransaction.setCustomAnimations(R.anim.slide_in_left,R.anim.slide_in_right);
             fragmentTransaction.replace(R.id.container_body, fragment);
             fragmentTransaction.commit();
-
         }
 
     }

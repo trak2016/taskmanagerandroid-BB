@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
+import com.parse.DeleteCallback;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
@@ -103,8 +104,13 @@ public class TasksFragment extends Fragment {
                         del_query.findInBackground(new FindCallback<Task>() {
                             @Override
                             public void done(List<Task> objects, ParseException e) {
-                                for (Task t : objects) {
-                                    t.deleteEventually();
+                                for (final Task t : objects) {
+                                    t.unpinInBackground(new DeleteCallback() {
+                                        @Override
+                                        public void done(ParseException e) {
+                                            t.deleteEventually();
+                                        }
+                                    });
                                 }
                                 tasksAdapter.deleteItems(objects);
 

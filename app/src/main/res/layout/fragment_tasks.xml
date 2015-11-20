@@ -37,6 +37,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             fab:fab_colorNormal="#810f00"
+            fab:fab_icon="@drawable/ic_action_del"
             fab:fab_colorPressed="#810f00"
             fab:fab_size="mini"
             fab:fab_title="Delete crossed tasks" />
@@ -46,6 +47,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             fab:fab_colorNormal="@color/colorPrimary"
+            fab:fab_icon="@drawable/ic_action_add"
             fab:fab_colorPressed="@color/colorPrimary"
             fab:fab_size="mini"
             fab:fab_title="Add new task" />

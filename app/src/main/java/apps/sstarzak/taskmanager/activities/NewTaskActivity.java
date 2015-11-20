@@ -5,12 +5,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.SeekBar;
 
 import com.parse.ParseException;
-import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
+import java.util.Calendar;
 import java.util.Date;
 
 import apps.sstarzak.taskmanager.R;
@@ -31,6 +33,11 @@ public class NewTaskActivity extends AppCompatActivity {
     @Bind(R.id.et_task_desc)
     EditText task_desc;
 
+    @Bind(R.id.seekBar)
+    SeekBar seekBar;
+
+    @Bind(R.id.date)
+    DatePicker datePicker;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,7 +49,7 @@ public class NewTaskActivity extends AppCompatActivity {
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
-        getSupportActionBar().setTitle(ParseUser.getCurrentUser().getUsername() + "'s new task");
+        getSupportActionBar().setTitle("Create new task...");
 
     }
 
@@ -53,6 +60,16 @@ public class NewTaskActivity extends AppCompatActivity {
         return true;
     }
 
+    public static Date getDateFromDatePicker(DatePicker datePicker){
+        int day = datePicker.getDayOfMonth();
+        int month = datePicker.getMonth();
+        int year =  datePicker.getYear();
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(year, month, day);
+
+        return calendar.getTime();
+    }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
@@ -60,23 +77,34 @@ public class NewTaskActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_add_task) {
-            Task task = new Task();
+            final Task task = new Task();
             task.setName(task_name.getText().toString());
             task.setDescription(task_desc.getText().toString());
-            task.setPriority(2);
+            task.setPriority(seekBar.getProgress());
+            task.setDueTo(getDateFromDatePicker(datePicker));
             task.setStatus(0);
-            task.setDueTo(new Date());
             task.setTaskList(Globals.task_lists.get(getIntent().getIntExtra("position", 2)));
             Globals.task_added = task;
             task.saveEventually(new SaveCallback() {
                 @Override
                 public void done(ParseException e) {
-                    NewTaskActivity.this.finish();
+                    task.pinInBackground(new SaveCallback() {
+                        @Override
+                        public void done(ParseException e) {
+                            NewTaskActivity.this.finish();
+                        }
+                    });
                 }
             });
             return true;
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        finish();
     }
 }

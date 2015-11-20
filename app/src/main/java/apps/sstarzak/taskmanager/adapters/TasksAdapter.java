@@ -15,7 +15,9 @@ import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 
+import java.util.Calendar;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 import apps.sstarzak.taskmanager.R;
@@ -74,6 +76,16 @@ public class TasksAdapter extends RecyclerView.Adapter<TasksAdapter.TaskViewHold
         }
         holder.name.setText(tasks.get(position).getName());
         holder.desc.setText(tasks.get(position).getDescription());
+
+        Date date = tasks.get(position).getDate("dueTo");
+        Calendar c = Calendar.getInstance();
+        c.setTime(date);
+
+        holder.due_to.setText(
+                c.get(Calendar.DAY_OF_MONTH) + "-" +
+                        (c.get(Calendar.MONTH)+1) + "-" +
+                        c.get(Calendar.YEAR)
+        );
 
         //TODO: fix date
 
