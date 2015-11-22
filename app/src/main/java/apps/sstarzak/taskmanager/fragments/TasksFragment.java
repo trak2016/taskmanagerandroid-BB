@@ -61,6 +61,17 @@ public class TasksFragment extends Fragment {
 
         final View v = inflater.inflate(R.layout.fragment_tasks, container, false);
 
+
+        menu = (FloatingActionsMenu) v.findViewById(R.id.fab_tasks);
+
+        if(getArguments().getInt("position") == -1) {
+            menu.setVisibility(View.INVISIBLE);
+            return v;
+        }
+        else {
+            menu.setVisibility(View.VISIBLE);
+        }
+
         recList = (RecyclerView) v.findViewById(R.id.tasks);
         llm = new LinearLayoutManager(getActivity());
         recList.setLayoutManager(llm);
@@ -92,7 +103,6 @@ public class TasksFragment extends Fragment {
 
                 recList.setAdapter(tasksAdapter);
 
-                menu = (FloatingActionsMenu) v.findViewById(R.id.fab_tasks);
 
                 removeAction = (FloatingActionButton) v.findViewById(R.id.fab_del);
                 removeAction.setOnClickListener(new View.OnClickListener() {

@@ -30,6 +30,7 @@ import apps.sstarzak.taskmanager.R;
 import apps.sstarzak.taskmanager.adapters.NavigationDrawerAdapter;
 import apps.sstarzak.taskmanager.globals.Globals;
 import apps.sstarzak.taskmanager.models.NavDrawerItem;
+import apps.sstarzak.taskmanager.parse.TaskList;
 
 public class FragmentDrawer extends Fragment {
 
@@ -38,7 +39,7 @@ public class FragmentDrawer extends Fragment {
     private RecyclerView recyclerView;
     private ActionBarDrawerToggle mDrawerToggle;
     private DrawerLayout mDrawerLayout;
-    private NavigationDrawerAdapter adapter;
+    public NavigationDrawerAdapter adapter;
     private View containerView;
     private static String[] titles = null;
     private FragmentDrawerListener drawerListener;
@@ -59,7 +60,7 @@ public class FragmentDrawer extends Fragment {
     public static List<NavDrawerItem> getData() {
         List<NavDrawerItem> data = new ArrayList<>();
 
-        ParseQuery<ParseObject> task_lists = new ParseQuery<ParseObject>("TaskList");
+        ParseQuery<TaskList> task_lists = ParseQuery.getQuery(TaskList.class);
         task_lists.whereEqualTo("user", ParseUser.getCurrentUser());
         try {
              Globals.task_lists = task_lists.find();
@@ -108,7 +109,6 @@ public class FragmentDrawer extends Fragment {
     }
 
     public void setUp(int fragmentId, DrawerLayout drawerLayout, final Toolbar toolbar) {
-
         containerView = getActivity().findViewById(fragmentId);
         mDrawerLayout = drawerLayout;
         mDrawerToggle = new ActionBarDrawerToggle(getActivity(), drawerLayout, toolbar, R.string.drawer_open, R.string.drawer_close) {
