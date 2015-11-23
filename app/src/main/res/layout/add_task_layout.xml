@@ -39,6 +39,8 @@
             <EditText
                 android:layout_width="wrap_content"
                 android:id="@+id/et_task_name"
+                android:imeOptions="actionDone"
+                android:singleLine="true"
                 android:layout_height="wrap_content"
                 android:hint="Type task name" />
 
@@ -60,6 +62,8 @@
             <EditText
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:imeOptions="actionDone"
+                android:singleLine="true"
                 android:id="@+id/et_task_desc"
                 android:hint="Type task description" />
 
@@ -124,3 +128,4 @@
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>
+MARIAN JEST MADRY
