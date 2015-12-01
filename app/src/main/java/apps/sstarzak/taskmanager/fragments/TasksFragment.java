@@ -7,7 +7,6 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +22,7 @@ import java.util.List;
 
 import apps.sstarzak.taskmanager.R;
 import apps.sstarzak.taskmanager.activities.NewTaskActivity;
+import apps.sstarzak.taskmanager.activities.TaskActivity;
 import apps.sstarzak.taskmanager.adapters.TasksAdapter;
 import apps.sstarzak.taskmanager.globals.Globals;
 import apps.sstarzak.taskmanager.helper.ItemClickSupport;
@@ -92,7 +92,12 @@ public class TasksFragment extends Fragment {
                 ItemClickSupport.addTo(recList).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
                     @Override
                     public void onItemClicked(RecyclerView recyclerView, int position, View v) {
-                        Log.d("position", objects.get(position).getName());
+                        Intent intent = new Intent(getContext(),TaskActivity.class);
+                        intent.putExtra("task",objects.get(position).getName());
+
+                        Globals.clicked_task = objects.get(position);
+
+                        startActivity(intent);
                     }
                 });
                 tasksAdapter = new TasksAdapter(objects);

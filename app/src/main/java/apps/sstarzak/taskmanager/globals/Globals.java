@@ -18,4 +18,6 @@ public class Globals {
 
     public static Task task_added = null;
 
+    public static Task clicked_task = null;
+
 }

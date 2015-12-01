@@ -87,8 +87,6 @@ public class TasksAdapter extends RecyclerView.Adapter<TasksAdapter.TaskViewHold
                         c.get(Calendar.YEAR)
         );
 
-        //TODO: fix date
-
         switch (tasks.get(position).getStatus().intValue()) {
             case 1:
                 holder.ll_line.setBackgroundResource(R.drawable.diagonal_line);

@@ -11,14 +11,6 @@ import java.util.Date;
 @ParseClassName("MileStone")
 public class MileStone extends ParseObject {
 
-    public String getName() {
-        return getString("name");
-    }
-
-    public void setName(String name) {
-        put("name",name);
-    }
-
     public String getDescription() {
         return getString("description");
     }
@@ -47,7 +39,7 @@ public class MileStone extends ParseObject {
     }
 
     public void setSequence(Number sequence) {
-        put("seqence",sequence);
+        put("sequence",sequence);
     }
 
     public Date getDueTo() {
