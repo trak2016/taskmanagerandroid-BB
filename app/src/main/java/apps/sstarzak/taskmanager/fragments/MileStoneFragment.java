@@ -121,6 +121,7 @@ public class MileStoneFragment extends Fragment {
                         if (menu.isExpanded())
                             menu.collapse();
 
+
                         builder.setPositiveButton("Add", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {

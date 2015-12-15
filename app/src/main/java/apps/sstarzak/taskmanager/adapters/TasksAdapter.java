@@ -78,14 +78,16 @@ public class TasksAdapter extends RecyclerView.Adapter<TasksAdapter.TaskViewHold
         holder.desc.setText(tasks.get(position).getDescription());
 
         Date date = tasks.get(position).getDate("dueTo");
-        Calendar c = Calendar.getInstance();
-        c.setTime(date);
+        if (date != null) {
+            Calendar c = Calendar.getInstance();
+            c.setTime(date);
 
-        holder.due_to.setText(
-                c.get(Calendar.DAY_OF_MONTH) + "-" +
-                        (c.get(Calendar.MONTH)+1) + "-" +
-                        c.get(Calendar.YEAR)
-        );
+            holder.due_to.setText(
+                    c.get(Calendar.DAY_OF_MONTH) + "-" +
+                            (c.get(Calendar.MONTH) + 1) + "-" +
+                            c.get(Calendar.YEAR)
+            );
+        }
 
         switch (tasks.get(position).getStatus().intValue()) {
             case 1:

@@ -33,6 +33,7 @@ public class RegistrationActivity extends AppCompatActivity {
         parseUser.setUsername(et_login.getText().toString());
         parseUser.setPassword(et_password.getText().toString());
         parseUser.setEmail(et_email.getText().toString());
+
         parseUser.signUpInBackground(new SignUpCallback() {
             @Override
             public void done(ParseException e) {

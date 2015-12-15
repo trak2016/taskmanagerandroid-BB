@@ -80,7 +80,6 @@ public class TasksFragment extends Fragment {
         ParseQuery<Task> selected = ParseQuery.getQuery(Task.class);
         selected.whereEqualTo("taskList", Globals.task_lists.get(getArguments().getInt("position")));
         selected.addDescendingOrder("priority");
-
         selected.findInBackground(new FindCallback<Task>() {
             @Override
             public void done(final List<Task> objects, ParseException e) {
